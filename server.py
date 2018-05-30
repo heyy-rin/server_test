@@ -14,6 +14,7 @@
 import socket
 import cv2
 import numpy
+import time
 
 #socket 수신 버퍼를 읽어서 반환하는 함수
 def recvall(sock, count):
@@ -33,18 +34,29 @@ TCP_PORT = 5001
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(True)
-conn, addr = s.accept() # socket과 client주소
+conn, addr = s.accept()  # socket과 client주소
 
-#String형의 이미지를 수신받아서 이미지로 변환 하고 화면에 출력
-length = recvall(conn,16)
+while True :
 
-#길이 16의 데이터를 먼저 수신하는 것은 여기에 이미지의 길이를 먼저 받아서 이미지를 받을 때 편리하려고 하는 것이다.
-stringData = recvall(conn, int(length))
-#print("string length", length.decode())
+    #String형의 이미지를 수신받아서 이미지로 변환 하고 화면에 출력
+    length = recvall(conn,16)
 
-data = numpy.fromstring(stringData, dtype='uint8')
-s.close()
-decimg=cv2.imdecode(data,1)
-cv2.imshow('SERVER',decimg)
-cv2.waitKey(0)
+    #길이 16의 데이터를 먼저 수신하는 것은 여기에 이미지의 길이를 먼저 받아서 이미지를 받을 때 편리하려고 하는 것이다.
+    stringData = recvall(conn, int(length))
+    print("string length", length.decode())
+
+    data = numpy.fromstring(stringData, dtype='uint8')
+    print("data : ", data)
+    # s.close()
+    #
+    decimg=cv2.imdecode(data,1)
+    cv2.imshow('SERVER',decimg)
+
+    k = cv2.waitKey(1) & 0xff
+    if (k == ord('q')):
+        break
+
+    time.sleep(0.1)
+
 cv2.destroyAllWindows()
+s.close()
