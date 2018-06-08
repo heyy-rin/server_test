@@ -27,7 +27,8 @@ def recvall(sock, count):
     return buf
 
 #수신에 사용될 내 ip와 내 port번호
-TCP_IP = '172.30.1.1'
+#TCP_IP = '172.30.1.1'
+TCP_IP = '10.10.24.117'
 TCP_PORT = 5001
 
 #TCP소켓 열고 수신 대기
@@ -38,25 +39,28 @@ conn, addr = s.accept()  # socket과 client주소
 
 while True :
 
-    #String형의 이미지를 수신받아서 이미지로 변환 하고 화면에 출력
+    # 이미지 수신
+    # String형의 이미지를 수신받아서 이미지로 변환 하고 화면에 출력
     length = recvall(conn,16)
-
-    #길이 16의 데이터를 먼저 수신하는 것은 여기에 이미지의 길이를 먼저 받아서 이미지를 받을 때 편리하려고 하는 것이다.
+    # 길이 16의 데이터를 먼저 수신하는 것은 여기에 이미지의 길이를 먼저 받아서 이미지를 받을 때 편리하려고 하는 것이다.
     stringData = recvall(conn, int(length))
-    print("string length", length.decode())
+    print("string length", length.decode()) # 받은 이미지 크기를 출력
 
     data = numpy.fromstring(stringData, dtype='uint8')
-    print("data : ", data)
-    # s.close()
-    #
-    decimg=cv2.imdecode(data,1)
-    cv2.imshow('SERVER',decimg)
+    print("data : ", data) # 받은 이미지 배열을 출력
 
+    # 받음 이미지 배열을 decode 해서 이미지로 변환
+    decimg=cv2.imdecode(data,1)
+    cv2.imshow('SERVER',decimg) # 서버에서 이미지를 제대로 수신했는지 출력해서 확인
+
+    # cv2가 키보드 입력을 위해 대기
+    # q를 누르면 프로그램이 종료된다
     k = cv2.waitKey(1) & 0xff
     if (k == ord('q')):
         break
 
-    time.sleep(0.1)
+    time.sleep(0.1) # 수신도 너무 빠르면 안됨!
 
+# window 와 socket 을 닫음
 cv2.destroyAllWindows()
 s.close()
