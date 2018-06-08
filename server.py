@@ -27,8 +27,8 @@ def recvall(sock, count):
     return buf
 
 #수신에 사용될 내 ip와 내 port번호
-#TCP_IP = '172.30.1.1'
-TCP_IP = '10.10.24.117'
+TCP_IP = '172.30.1.4'
+#TCP_IP = '10.10.24.117'
 TCP_PORT = 5001
 
 #TCP소켓 열고 수신 대기
@@ -36,6 +36,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(True)
 conn, addr = s.accept()  # socket과 client주소
+imageCount = 0;
 
 while True :
 
@@ -52,6 +53,9 @@ while True :
     # 받음 이미지 배열을 decode 해서 이미지로 변환
     decimg=cv2.imdecode(data,1)
     cv2.imshow('SERVER',decimg) # 서버에서 이미지를 제대로 수신했는지 출력해서 확인
+
+    #filename = 'image'+imageCount+'png'
+    #cv2.imwrite(filename, decimg) # 이미지를 저장해서 사용하려면 이걸 이용해서 저장
 
     # cv2가 키보드 입력을 위해 대기
     # q를 누르면 프로그램이 종료된다
