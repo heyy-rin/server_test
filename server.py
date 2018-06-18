@@ -51,7 +51,7 @@ while True :
     print("data : ", data) # 받은 이미지 배열을 출력
 
     # 받음 이미지 배열을 decode 해서 이미지로 변환
-    decimg=cv2.imdecode(data,1)
+    decimg = cv2.imdecode(data,1)
     cv2.imshow('SERVER',decimg) # 서버에서 이미지를 제대로 수신했는지 출력해서 확인
 
     #filename = 'image'+imageCount+'png'
